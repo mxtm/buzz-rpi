@@ -14,9 +14,9 @@ with open("/home/pi/buzz-rpi/motion.log", "a") as file:
 message = messaging.Message(
             notification = messaging.Notification(
                 title='Buzz',
-                body='Bzz. Bzz. Motion was detected at your door.'
+                body='Bzz. Bzz. Motion was detected at your door.',
             ),
-            topic=topic
+            topic=topic,
 )
 
 response = messaging.send(message)
