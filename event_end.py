@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+
 from datetime import datetime
-with open("/home/pi/buzz-rpi/testing.log", "a") as file:
+
+with open("/home/pi/buzz-rpi/motion.log", "a") as file:
     file.write(f"Motion event ended at {str(datetime.now())}\n")
