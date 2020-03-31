@@ -3,7 +3,7 @@
 # TODO: write a deployment script that goes from a fresh RPi Raspbian install to Buzz unit
 # This should go similar to as follows:
 
-# create directory /home/pi/motion
+# create directories /home/pi/motion and /home/pi/motion/logs
 
 # install motion from Github releases
 
