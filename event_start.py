@@ -8,7 +8,7 @@ cred = credentials.Certificate('/home/pi/buzz-rpi/firebase_admin_key.json')
 default_app = firebase_admin.initialize_app(cred)
 topic = 'global'
 
-with open("/home/pi/buzz-rpi/motion.log", "a") as file:
+with open("/home/pi/buzz-rpi/logs/motion.log", "a") as file:
     file.write(f"Motion event started at {str(datetime.now())}\n")
 
 message = messaging.Message(
@@ -21,5 +21,5 @@ message = messaging.Message(
 
 response = messaging.send(message)
 
-with open("/home/pi/buzz-rpi/motion.log", "a") as file:
+with open("/home/pi/buzz-rpi/logs/motion.log", "a") as file:
     file.write(f"Message {response} sent\n")
