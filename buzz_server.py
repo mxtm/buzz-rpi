@@ -51,10 +51,12 @@ if __name__ == "__main__":
                     for i in range(0, 51):
                         log(f"Checking frame {i} for faces")
                         ret, frame = video_capture.read()
-                        cv2.imwrite(f"/home/pi/buzz-rpi/{i}.jpg", frame)
+                        cv2.imwrite(f"/home/pi/buzz-rpi/motion/{i}-{str(datetime.now())}.jpg", frame)
                         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
                         rgb_small_frame = small_frame[:, :, ::-1]
                         face_locations = face_recognition.face_locations(rgb_small_frame)
                         if len(face_locations) != 0:
                             log(f"Face found in frame {i}")
+                            notification_response = send_notification("A face was detected at your door!")
+                            log(f"Notification {notification_response} sent")
                             break
