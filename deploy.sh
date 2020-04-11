@@ -21,6 +21,8 @@
 
 # install python3 libraries face_recognition and firebase_admin (globally)
 
+# install opencv-python version 4.1.0.25 (latest doesn't work on rpi) with deps (see: https://www.pyimagesearch.com/2018/09/19/pip-install-opencv/)
+
 # fix permissions
 
 # restart motion systemd service
