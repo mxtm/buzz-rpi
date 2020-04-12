@@ -1,3 +1,4 @@
 logs/*
 firebase_admin_key.json
-buzz_socket
+buzz.egg-info
+*__pycache__*
