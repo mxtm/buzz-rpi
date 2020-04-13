@@ -1,0 +1,11 @@
+[Unit]
+Description=Buzz doorbell server software
+
+[Service]
+Type=simple
+User=motion
+Group=motion
+ExecStart=/usr/bin/env python3 -m buzz.server
+
+[Install]
+WantedBy=multi-user.target
