@@ -55,22 +55,23 @@ def handle_motion(firebase_connector, known_face_encodings, known_face_names):
                 "I see someone at your door! Checking if I know them...")
             log(f"Notification {notification_response} sent")
             for face_encoding in face_encodings:
-                matches = face_recognition.compare_faces(known_face_encodings,
-                                                         face_encoding)
+                # matches = face_recognition.compare_faces(known_face_encodings,
+                #                                          face_encoding)
+
                 name = "An unknown visitor"
 
                 face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
                 log(f"Known face names: {str(known_face_names)}")
                 log(f"Face distances: {str(face_distances)}")
                 best_match_index = np.argmin(face_distances)
-                if matches[best_match_index]:
+                if face_distances[best_match_index] <= 0.55:
                     name = known_face_names[best_match_index]
 
-                    firebase_connector.add_visitor_log_entry(name)
+                firebase_connector.add_visitor_log_entry(name)
 
-                    notification_response = firebase_connector.send_notification(
-                        name + " is at your door!")
-                    log(f"Notification {notification_response} sent")
+                notification_response = firebase_connector.send_notification(
+                    name + " is at your door!")
+                log(f"Notification {notification_response} sent")
 
             break
 
