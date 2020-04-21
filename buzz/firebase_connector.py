@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 
-from buzz.logger import log
-
-import firebase_admin
 import os
+from datetime import datetime
+
+from firebase_admin import messaging, credentials, firestore, storage
 import requests
 import yaml
-from datetime import datetime
-from firebase_admin import messaging, credentials, firestore, storage
 from PIL import Image
 from PIL.ExifTags import TAGS
+import firebase_admin
+
+from buzz.logger import log
+
 
 with open("/home/pi/buzz-rpi/buzz/config.yml", "r") as config_file:
-    config = yaml.load(config_file, Loader=yaml.FullLoader)
+    CONFIG = yaml.load(config_file, Loader=yaml.FullLoader)
 
 class FirebaseConnector:
 
@@ -33,12 +35,16 @@ class FirebaseConnector:
             blob.upload_from_file(file)
             blob.make_public()
 
-        query = self.visitors_log_ref.where(u"video", u"==", u"").order_by(u"timestamp", direction=firestore.Query.DESCENDING).limit(1)
+        query = self.visitors_log_ref.where(u"video",
+                                            u"==",
+                                            u"").order_by(
+                                                u"timestamp",
+                                                direction=firestore.Query.DESCENDING).limit(1)
         docs = query.stream()
 
         for doc in docs:
             self.visitors_log_ref.document(doc.id).set({u"video": blob.public_url}, merge=True)
-        
+
     def send_notification(self, notification_body):
         message = messaging.Message(
             notification = messaging.Notification(
@@ -51,7 +57,7 @@ class FirebaseConnector:
         return messaging.send(message)
 
     def get_visitor_info(self):
-        visitors_ref = self.db.collection(u'visitors')
+        visitors_ref = self.database.collection(u'visitors')
         docs = visitors_ref.stream()
 
         visitors = {}
@@ -62,20 +68,20 @@ class FirebaseConnector:
         return visitors
 
     def get_visitor_photos(self, visitors_info):
-        for k, v in visitors_info.items():
-            image = requests.get(v['image'], allow_redirects=True)
-            open(config["visitors"]["photos_target"] + k + ".jpg", "wb").write(image.content)
-            log(f"Downloaded photo for visitor {k}")
+        for key, value in visitors_info.items():
+            image = requests.get(value['image'], allow_redirects=True)
+            open(CONFIG["visitors"]["photos_target"] + key + ".jpg", "wb").write(image.content)
+            log(f"Downloaded photo for visitor {key}")
 
-        for image in os.listdir(config["visitors"]["photos_target"]):
-            image_path = config["visitors"]["photos_target"] + image
+        for image in os.listdir(CONFIG["visitors"]["photos_target"]):
+            image_path = CONFIG["visitors"]["photos_target"] + image
             image_object = Image.open(image_path)
 
             try:
-                for k, v in image_object._getexif().items():
-                    if TAGS.get(k) == "Orientation":
-                        orientation = v
-                
+                for key, value in image_object._getexif().items():
+                    if TAGS.get(key) == "Orientation":
+                        orientation = value
+
                 if orientation == 3:
                     image_object = image_object.rotate(180)
                 elif orientation == 6:
@@ -88,14 +94,14 @@ class FirebaseConnector:
             image_object.save(image_path)
 
     def __init__(self):
-        cred = credentials.Certificate(config["firebase"]["credential_certificate"])
+        cred = credentials.Certificate(CONFIG["firebase"]["credential_certificate"])
         default_app = firebase_admin.initialize_app(cred,
                                                     {
-                                                        'storageBucket': config["firebase"]["storage_bucket"]
+                                                        'storageBucket':
+                                                        CONFIG["firebase"]["storage_bucket"]
                                                     })
 
-        self.db = firestore.client()
+        self.database = firestore.client()
         self.bucket = storage.bucket()
 
-        self.visitors_log_ref = self.db.collection(u'visitors_log')
-
+        self.visitors_log_ref = self.database.collection(u'visitors_log')
