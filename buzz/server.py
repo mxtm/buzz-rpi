@@ -25,18 +25,33 @@ def main():
     visitor_info = firebase_connector.get_visitor_info()
     log("Got visitor info")
 
-    firebase_connector.get_visitor_photos(visitor_info)
-    log("Finished getting visitor photos")
+    if not config["super-debug"]["dont_redownload_visitor_photos"]:
+        firebase_connector.get_visitor_photos(visitor_info)
+        log("Finished getting visitor photos")
+    else:
+        log("Skipping getting visitor photos per config")
 
-    try:
-        last_run_face_data_file = open('/home/pi/buzz-rpi/last_run.pickle', 'rb')
-        last_run_face_data = pickle.load(last_run_face_data_file)
-        known_face_encodings, known_face_names = last_run_face_data
-    except FileNotFoundError:
+    if not config["super-debug"]["dont_reprocess_visitor_faces"]:
         known_face_encodings, known_face_names = process_visitor_images(visitor_info)
-        face_data_file = open('/home/pi/buzz-rpi/last_run.pickle', 'wb')
-        face_data = (known_face_encodings, known_face_names)
-        pickle.dump(face_data, face_data_file)
+    else:
+        log("Attempting to skip processing visitor faces per config")
+        try:
+            visitor_faces_pickle = open(
+                config["super-debug"]["visitor_faces_pickle"],
+                'rb'
+            )
+            saved_face_data = pickle.load(visitor_faces_pickle)
+            known_face_encodings, known_face_names = saved_face_data
+            log("Loaded saved visitor face data")
+        except FileNotFoundError:
+            log("Failed to load visitor face data, generating and saving it")
+            known_face_encodings, known_face_names = process_visitor_images(visitor_info)
+            visitor_faces_pickle = open(
+                config["super-debug"]["visitor_faces_pickle"],
+                'wb'
+            )
+            face_data = (known_face_encodings, known_face_names)
+            pickle.dump(face_data, visitor_faces_pickle)
 
     try:
         os.unlink('/tmp/buzz_socket')

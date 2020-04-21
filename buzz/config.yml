@@ -8,5 +8,11 @@ firebase:
 logs:
     client: /home/pi/buzz-rpi/logs/client.log
     server: /home/pi/buzz-rpi/logs/server.log
+super-debug:
+    dont_redownload_visitor_photos: true
+    dont_reprocess_visitor_faces: true
+    visitor_faces_pickle: /home/pi/buzz-rpi/visitor-faces.pickle
+    copy_attempted_face_detection_frames: true
+    attempts_destination: /home/pi/motion/super-debug/
 visitors:
     photos_target: /home/pi/buzz-rpi/visitors/
