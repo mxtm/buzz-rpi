@@ -11,10 +11,12 @@ from datetime import datetime
 with open("/home/pi/buzz-rpi/buzz/config.yml", "r") as config_file:
     config = yaml.load(config_file, Loader=yaml.FullLoader)
 
-def handle_motion(firebase_connector, video_capture, known_face_encodings,
-                  known_face_names):
+def handle_motion(firebase_connector, known_face_encodings, known_face_names):
 
     log("Motion event started")
+
+    video_capture = cv2.VideoCapture(config["core"]["video_capture_url"])
+    log("Ready to grab frames")
 
     notification_response = firebase_connector.send_notification("Bzz. Bzz. Motion was detected at your door.")
     log(f"Notification {notification_response} sent")
@@ -61,3 +63,6 @@ def handle_motion(firebase_connector, video_capture, known_face_encodings,
                     log(f"Notification {notification_response} sent")
 
             break
+
+    video_capture.release()
+    log("Destroyed frame capture object")

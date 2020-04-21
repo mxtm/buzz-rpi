@@ -2,6 +2,7 @@
 core:
     debug: true
     socket: /tmp/buzz_socket
+    video_capture_url: http://127.0.0.1:8081
 firebase:
     credential_certificate: /home/pi/buzz-rpi/firebase_admin_key.json
     storage_bucket: ***REMOVED***

@@ -19,9 +19,6 @@ def main():
     firebase_connector = FirebaseConnector()
     log("Firebase connection ready")
 
-    video_capture = cv2.VideoCapture('http://127.0.0.1:8081')
-    log("Ready to grab frames")
-
     visitor_info = firebase_connector.get_visitor_info()
     log("Got visitor info")
 
@@ -68,8 +65,7 @@ def main():
                     log(f"Received signal: {received_signal}")
 
                 if received_signal == "event_start":
-                    handle_motion(firebase_connector, video_capture,
-                                  known_face_encodings, known_face_names)
+                    handle_motion(firebase_connector, known_face_encodings, known_face_names)
                 elif received_signal == "event_end" and config["core"]["debug"]:
                     notification_response = firebase_connector.send_notification("DEBUG: Motion event ended.")
                     log(f"Notification {notification_response} sent")
