@@ -54,6 +54,8 @@ def handle_motion(firebase_connector, video_capture, known_face_encodings,
                 best_match_index = np.argmin(face_distances)
                 if matches[best_match_index]:
                     name = known_face_names[best_match_index]
+
+                    firebase_connector.add_visitor_log_entry(name)
                                 
                     notification_response = firebase_connector.send_notification(name + " is at your door!")
                     log(f"Notification {notification_response} sent")

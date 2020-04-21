@@ -6,6 +6,7 @@ import firebase_admin
 import os
 import requests
 import yaml
+from datetime import datetime
 from firebase_admin import messaging, credentials, firestore, storage
 from PIL import Image
 from PIL.ExifTags import TAGS
@@ -14,13 +15,30 @@ with open("/home/pi/buzz-rpi/buzz/config.yml", "r") as config_file:
     config = yaml.load(config_file, Loader=yaml.FullLoader)
 
 class FirebaseConnector:
+
+    def add_visitor_log_entry(self, visitors):
+        timestamp = datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
+        data = {
+            u"timestamp": datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
+            u"video": u"",
+            u"visitors": visitors
+        }
+        self.visitors_log_ref.document(u"{0}".format(timestamp.encode('utf-8'))).set(data)
+
     def upload_to_storage(self, source_file):
         destination_name = os.path.basename(source_file)
 
         blob = self.bucket.blob(destination_name)
         with open(source_file, "rb") as file:
             blob.upload_from_file(file)
+            blob.make_public()
 
+        query = self.visitors_log_ref.where(u"video", u"==", u"").order_by(u"timestamp", direction=firestore.Query.DESCENDING).limit(1)
+        docs = query.stream()
+
+        for doc in docs:
+            self.visitors_log_ref.document(doc.id).set({u"video": blob.public_url}, merge=True)
+        
     def send_notification(self, notification_body):
         message = messaging.Message(
             notification = messaging.Notification(
@@ -78,3 +96,6 @@ class FirebaseConnector:
 
         self.db = firestore.client()
         self.bucket = storage.bucket()
+
+        self.visitors_log_ref = self.db.collection(u'visitors_log')
+
