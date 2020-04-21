@@ -2,12 +2,14 @@
 
 from buzz.logger import log
 
+import yaml
 from multiprocessing.connection import Client
 
-SOCKET = "/tmp/buzz_socket"
+with open("/home/pi/buzz-rpi/buzz/config.yml", "r") as config_file:
+    config = yaml.load(config_file)
 
 def main():
-    with Client(SOCKET, "AF_UNIX") as conn:
+    with Client(config["core"]["socket"], "AF_UNIX") as conn:
         conn.send("event_start")
         log("Sent event_start to server", client=True)
 

@@ -1,0 +1,12 @@
+# buzz server configuration file
+core:
+    debug: true
+    socket: /tmp/buzz_socket
+firebase:
+    credential_certificate: /home/pi/buzz-rpi/firebase_admin_key.json
+    storage_bucket: ***REMOVED***
+logs:
+    client: /home/pi/buzz-rpi/logs/client.log
+    server: /home/pi/buzz-rpi/logs/server.log
+visitors:
+    photos_target: /home/pi/buzz-rpi/visitors/
