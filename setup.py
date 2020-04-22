@@ -8,4 +8,12 @@ setup(name='buzz',
       author_email='max@mxtm.me',
       license='MIT',
       packages=find_packages(include=['buzz', 'buzz.*']),
+      install_requires=[
+          'firebase_admin',
+          'requests',
+          'yaml',
+          'opencv-python',
+          'numpy',
+          'face_recognition',
+      ],
       zip_safe=False)

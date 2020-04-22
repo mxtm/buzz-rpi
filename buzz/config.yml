@@ -5,7 +5,7 @@ core:
     video_capture_url: http://127.0.0.1:8081
 firebase:
     credential_certificate: /home/pi/buzz-rpi/firebase_admin_key.json
-    storage_bucket: ***REMOVED***
+    storage_bucket: YOUR_FIREBASE_STORAGE_BUCKET
 logs:
     client: /home/pi/buzz-rpi/logs/client.log
     server: /home/pi/buzz-rpi/logs/server.log
