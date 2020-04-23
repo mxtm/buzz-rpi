@@ -4,3 +4,4 @@ buzz.egg-info
 *__pycache__*
 visitors/*
 *.pickle
+config.yml
