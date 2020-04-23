@@ -45,6 +45,8 @@ class FirebaseConnector:
         for doc in docs:
             self.visitors_log_ref.document(doc.id).set({u"video": blob.public_url}, merge=True)
 
+        os.unlink(source_file)
+
     def send_notification(self, notification_body):
         message = messaging.Message(
             notification = messaging.Notification(
