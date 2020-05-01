@@ -1,6 +1,6 @@
 # buzz server configuration file
 core:
-    debug: true
+    debug: false
     socket: /tmp/buzz_socket
     video_capture_url: http://127.0.0.1:8081
 firebase:
@@ -10,10 +10,10 @@ logs:
     client: /home/pi/buzz-rpi/logs/client.log
     server: /home/pi/buzz-rpi/logs/server.log
 super-debug:
-    dont_redownload_visitor_photos: true
-    dont_reprocess_visitor_faces: true
+    dont_redownload_visitor_photos: false
+    dont_reprocess_visitor_faces: false
     visitor_faces_pickle: /home/pi/buzz-rpi/visitor-faces.pickle
-    copy_attempted_face_detection_frames: true
+    copy_attempted_face_detection_frames: false
     attempts_destination: /home/pi/motion/super-debug/
 visitors:
     photos_target: /home/pi/buzz-rpi/visitors/
