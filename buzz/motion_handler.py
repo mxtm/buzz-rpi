@@ -51,9 +51,6 @@ def handle_motion(firebase_connector, known_face_encodings, known_face_names):
 
         if len(face_encodings) != 0:
             log(f"Face detected in frame {i}")
-            notification_response = firebase_connector.send_notification(
-                "I see someone at your door! Checking if I know them...")
-            log(f"Notification {notification_response} sent")
             for face_encoding in face_encodings:
                 # matches = face_recognition.compare_faces(known_face_encodings,
                 #                                          face_encoding)
